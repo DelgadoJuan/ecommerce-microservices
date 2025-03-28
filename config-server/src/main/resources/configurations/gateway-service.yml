@@ -1,0 +1,46 @@
+server:
+  port: 8222
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://localhost:9098/realms/micro-service"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+        routes:
+          - id: customer-service
+            uri: lb://customer-service
+            predicates:
+              - Path=/api/v1/customer/**
+          - id: order-service
+            uri: lb://order-service
+            predicates:
+              - Path=/api/v1/order/**
+          - id: order-lines-service
+            uri: lb://order-service
+            predicates:
+              - Path=/api/v1/order-line/**
+          - id: product-service
+            uri: lb://product-service
+            predicates:
+              - Path=/api/v1/product/**
+          - id: category-service
+            uri: lb://product-service
+            predicates:
+              - Path=/api/v1/category/**
+          - id: payment-service
+            uri: lb://payment-service
+            predicates:
+              - Path=/api/v1/payment/**
